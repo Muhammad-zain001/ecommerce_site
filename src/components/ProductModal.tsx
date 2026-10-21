@@ -63,25 +63,25 @@ export const ProductModal: React.FC<ProductModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 bg-black/65 backdrop-blur-xs overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 md:p-6 bg-black/75 backdrop-blur-xs overflow-hidden">
       <div 
-        className="relative w-full max-w-5xl bg-[#F6F4EF] rounded-2xl shadow-2xl border border-[#D9C9A7]/40 overflow-hidden my-auto max-h-[92vh] flex flex-col md:flex-row"
+        className="relative w-full max-w-5xl bg-[#F6F4EF] rounded-t-3xl sm:rounded-2xl shadow-2xl border border-[#D9C9A7]/40 flex flex-col md:flex-row overflow-hidden max-h-[94vh] sm:max-h-[90vh]"
         role="dialog"
         aria-modal="true"
       >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-20 p-2.5 rounded-full bg-white/80 hover:bg-white text-stone-700 hover:text-[#121212] transition-colors shadow-sm"
+          className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 p-2 sm:p-2.5 rounded-full bg-white/90 hover:bg-white text-stone-700 hover:text-[#121212] transition-colors shadow-sm"
           aria-label="Close dialog"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Left Column: Gallery */}
-        <div className="w-full md:w-1/2 p-4 md:p-6 flex flex-col gap-4 bg-white/60 md:border-r border-stone-200">
-          {/* Main Image */}
-          <div className="relative aspect-3/4 w-full rounded-xl overflow-hidden bg-stone-100 shadow-xs">
+        <div className="w-full md:w-1/2 p-3 sm:p-6 flex flex-col gap-2 sm:gap-4 bg-white/60 md:border-r border-stone-200 shrink-0">
+          {/* Main Image (Balanced height on mobile so buy buttons are instantly accessible) */}
+          <div className="relative h-56 sm:h-72 md:aspect-3/4 w-full rounded-xl overflow-hidden bg-stone-100 shadow-xs">
             <img
               src={product.images[selectedImageIdx] || product.images[0]}
               alt={product.title}
@@ -89,7 +89,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
               className="w-full h-full object-cover object-top"
             />
             {product.isBestSeller && (
-              <span className="absolute top-4 left-4 bg-[#121212] text-white text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-xs">
+              <span className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-[#121212] text-white text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-xs">
                 Signature Collection
               </span>
             )}
@@ -350,6 +350,32 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                 </ul>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Sticky Mobile Purchase Bar (Always visible at thumb-level on mobile) */}
+        <div className="md:hidden sticky bottom-0 inset-x-0 bg-white/95 backdrop-blur-md p-3 border-t border-stone-200 z-30 flex items-center justify-between gap-2 shadow-[0_-4px_16px_rgba(0,0,0,0.08)]">
+          <div className="flex flex-col">
+            <span className="text-[10px] text-stone-500 uppercase tracking-wider font-semibold">Total (COD)</span>
+            <span className="font-mono text-base font-bold text-[#121212] tabular-nums">
+              {formatPrice(product.price * quantity)}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1.5 flex-1 max-w-[240px] justify-end">
+            <button
+              onClick={handleAddToCart}
+              className="flex-1 flex items-center justify-center gap-1 py-2.5 px-2 text-xs font-semibold text-white bg-[#2E4A3B] hover:bg-[#203529] rounded-xl transition-all shadow-xs active:scale-95"
+            >
+              <ShoppingBag className="w-3.5 h-3.5 shrink-0" />
+              <span>{addedToast ? 'Added ✓' : 'Add to Bag'}</span>
+            </button>
+            <button
+              onClick={handleBuyNow}
+              className="flex-1 py-2.5 px-3 text-xs font-bold text-[#121212] bg-[#D9C9A7] hover:bg-[#cfbd97] rounded-xl transition-all shadow-xs active:scale-95 whitespace-nowrap text-center"
+            >
+              Buy Now (COD)
+            </button>
           </div>
         </div>
       </div>

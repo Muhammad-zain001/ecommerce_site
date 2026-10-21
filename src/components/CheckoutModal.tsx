@@ -116,9 +116,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/65 backdrop-blur-xs overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/75 backdrop-blur-xs overflow-hidden">
       <div 
-        className="relative w-full max-w-3xl bg-[#F6F4EF] rounded-2xl shadow-2xl border border-[#D9C9A7]/50 overflow-hidden my-auto max-h-[92vh] overflow-y-auto"
+        className="relative w-full max-w-3xl bg-[#F6F4EF] rounded-t-3xl sm:rounded-2xl shadow-2xl border border-[#D9C9A7]/50 flex flex-col overflow-hidden max-h-[94vh] sm:max-h-[90vh]"
         role="dialog"
         aria-modal="true"
         aria-labelledby="checkout-title"
@@ -447,14 +447,14 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     <p>IBAN: <strong>PK64MEZN0001020304050607</strong></p>
                   </div>
                   <p className="text-[11px] text-stone-500 pt-1">
-                    *After placing order, please share payment receipt screenshot to our WhatsApp at +92 321 4455888.
+                    *After placing order, please share payment receipt screenshot to our WhatsApp at +923244167247.
                   </p>
                 </div>
               )}
             </div>
 
-            {/* Total Review & Place Order Button */}
-            <div className="pt-4 border-t border-stone-200 space-y-4">
+            {/* Total Review */}
+            <div className="pt-4 border-t border-stone-200 space-y-3">
               <div className="p-4 bg-white rounded-xl border border-stone-200 space-y-1.5 text-xs">
                 <div className="flex justify-between text-stone-600">
                   <span>Subtotal ({items.reduce((a, b) => a + b.quantity, 0)} items)</span>
@@ -471,10 +471,13 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   <span className="font-mono tabular-nums text-[#2E4A3B]">{formatPrice(total)}</span>
                 </div>
               </div>
+            </div>
 
+            {/* Sticky Mobile & Desktop Submit Button */}
+            <div className="sticky bottom-0 bg-[#F6F4EF]/95 backdrop-blur-md pt-2 pb-1">
               <button
                 type="submit"
-                className="w-full py-3.5 px-6 text-sm font-semibold text-white bg-[#2E4A3B] rounded-xl hover:bg-[#203529] transition-all shadow-md active:scale-[0.99] flex items-center justify-center gap-2"
+                className="w-full py-3.5 px-6 text-sm font-bold text-white bg-[#2E4A3B] rounded-xl hover:bg-[#203529] transition-all shadow-md active:scale-[0.99] flex items-center justify-center gap-2"
               >
                 <span>Confirm & Place Order ({formatPrice(total)})</span>
               </button>

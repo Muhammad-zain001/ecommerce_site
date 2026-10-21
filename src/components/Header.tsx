@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, ShoppingBag, Heart, Menu, X, Truck, User } from 'lucide-react';
+import { Search, ShoppingBag, Heart, Menu, X, Truck, User, ShieldCheck } from 'lucide-react';
 import { ZaynKraftLogo } from './ZaynKraftLogo';
 import { ProductCategory } from '../types/store';
 
@@ -149,14 +149,15 @@ export const Header: React.FC<HeaderProps> = ({
               </span>
             </button>
 
-            {/* Store Management Console trigger */}
+            {/* Direct Prominent Admin Panel Button */}
             <button
               onClick={onOpenAdmin}
-              className="p-1.5 sm:p-2 text-stone-600 hover:text-[#121212] rounded-lg hover:bg-stone-100 transition-colors"
-              title="Store Admin Panel"
-              aria-label="Store Admin Panel"
+              className="flex items-center gap-1 py-1.5 px-2 sm:px-2.5 text-xs font-semibold text-[#121212] bg-[#D9C9A7]/80 hover:bg-[#D9C9A7] border border-[#C5B490] rounded-xl transition-all shadow-2xs active:scale-95"
+              title="Store Admin Panel (Orders, History & Stock)"
+              aria-label="Open Admin Panel"
             >
-              <User className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
+              <ShieldCheck className="w-3.5 h-3.5 text-[#2E4A3B] shrink-0" />
+              <span>Admin</span>
             </button>
 
             {/* Mobile menu hamburger */}
