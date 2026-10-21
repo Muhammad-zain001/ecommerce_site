@@ -16,6 +16,7 @@ import { BrandStory } from './components/BrandStory';
 import { CustomerReviews } from './components/CustomerReviews';
 import { PoliciesModal } from './components/PoliciesModal';
 import { AdminPanel } from './components/AdminPanel';
+import { CustomerOrdersModal } from './components/CustomerOrdersModal';
 import { Footer } from './components/Footer';
 import { FloatingWhatsApp } from './components/FloatingWhatsApp';
 import { MobileBottomNav } from './components/MobileBottomNav';
@@ -113,6 +114,17 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [policyTab, setPolicyTab] = useState<'shipping' | 'returns' | 'faqs' | 'contact' | null>(null);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [isMyOrdersOpen, setIsMyOrdersOpen] = useState(false);
+
+  // Count customer's own orders placed on this device
+  const myOrdersCount = (() => {
+    try {
+      const ids = JSON.parse(localStorage.getItem('zk_my_order_ids') || '[]');
+      return Array.isArray(ids) ? ids.length : 0;
+    } catch {
+      return 0;
+    }
+  })();
 
   // Orders State
   const [orders, setOrders] = useState<Order[]>(() => {
@@ -252,6 +264,8 @@ export default function App() {
         onOpenSearch={() => setIsSearchOpen(true)}
         onOpenStory={scrollToStory}
         onOpenAdmin={() => setIsAdminOpen(true)}
+        onOpenMyOrders={() => setIsMyOrdersOpen(true)}
+        myOrdersCount={myOrdersCount}
       />
 
       {/* Main Content */}
@@ -447,7 +461,7 @@ export default function App() {
         initialTab={policyTab || 'shipping'}
       />
 
-      {/* Store Operations & Owner Admin Panel */}
+      {/* Store Operations & Owner Admin Panel (Protected) */}
       <AdminPanel
         isOpen={isAdminOpen}
         onClose={() => setIsAdminOpen(false)}
@@ -455,6 +469,14 @@ export default function App() {
         onUpdateStatus={handleUpdateOrderStatus}
         products={productsList}
         onUpdateProduct={handleUpdateProduct}
+      />
+
+      {/* Customer's Personal Order History (Only shows their own purchases) */}
+      <CustomerOrdersModal
+        isOpen={isMyOrdersOpen}
+        onClose={() => setIsMyOrdersOpen(false)}
+        allOrders={orders}
+        onOpenStore={scrollToCatalog}
       />
     </div>
   );

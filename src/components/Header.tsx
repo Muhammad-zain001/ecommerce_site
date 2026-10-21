@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, ShoppingBag, Heart, Menu, X, Truck, User, ShieldCheck } from 'lucide-react';
+import { Search, ShoppingBag, Heart, Menu, X, Truck, User, ShieldCheck, Package } from 'lucide-react';
 import { ZaynKraftLogo } from './ZaynKraftLogo';
 import { ProductCategory } from '../types/store';
 
@@ -8,12 +8,14 @@ interface HeaderProps {
   onSelectCategory: (cat: ProductCategory) => void;
   cartCount: number;
   wishlistCount: number;
+  myOrdersCount?: number;
   onOpenCart: () => void;
   onOpenWishlist: () => void;
   onOpenTracking: () => void;
   onOpenSearch: () => void;
   onOpenStory: () => void;
   onOpenAdmin: () => void;
+  onOpenMyOrders: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -21,12 +23,14 @@ export const Header: React.FC<HeaderProps> = ({
   onSelectCategory,
   cartCount,
   wishlistCount,
+  myOrdersCount = 0,
   onOpenCart,
   onOpenWishlist,
   onOpenTracking,
   onOpenSearch,
   onOpenStory,
   onOpenAdmin,
+  onOpenMyOrders,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -149,11 +153,27 @@ export const Header: React.FC<HeaderProps> = ({
               </span>
             </button>
 
+            {/* Customer "My Orders" History Button */}
+            <button
+              onClick={onOpenMyOrders}
+              className="flex items-center gap-1.5 py-1.5 px-2 sm:px-2.5 text-xs font-semibold text-stone-700 hover:text-[#121212] bg-white border border-stone-300 rounded-xl hover:bg-stone-50 transition-colors shadow-2xs"
+              title="My Orders & Purchase History"
+              aria-label="My Orders"
+            >
+              <Package className="w-3.5 h-3.5 text-[#2E4A3B] shrink-0" />
+              <span className="hidden sm:inline">My Orders</span>
+              {myOrdersCount > 0 && (
+                <span className="w-4 h-4 rounded-full bg-[#2E4A3B] text-white text-[9px] font-mono flex items-center justify-center font-bold">
+                  {myOrdersCount}
+                </span>
+              )}
+            </button>
+
             {/* Direct Prominent Admin Panel Button */}
             <button
               onClick={onOpenAdmin}
               className="flex items-center gap-1 py-1.5 px-2 sm:px-2.5 text-xs font-semibold text-[#121212] bg-[#D9C9A7]/80 hover:bg-[#D9C9A7] border border-[#C5B490] rounded-xl transition-all shadow-2xs active:scale-95"
-              title="Store Admin Panel (Orders, History & Stock)"
+              title="Store Owner Admin Panel (Protected)"
               aria-label="Open Admin Panel"
             >
               <ShieldCheck className="w-3.5 h-3.5 text-[#2E4A3B] shrink-0" />
@@ -222,12 +242,23 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
             <button
               onClick={() => {
+                onOpenMyOrders();
+                setMobileMenuOpen(false);
+              }}
+              className="block w-full text-left py-2 text-sm text-stone-700 flex items-center gap-2"
+            >
+              <Package className="w-4 h-4 text-[#2E4A3B]" />
+              <span>My Orders & Purchases</span>
+            </button>
+            <button
+              onClick={() => {
                 onOpenAdmin();
                 setMobileMenuOpen(false);
               }}
-              className="block w-full text-left py-2 text-sm text-stone-700"
+              className="block w-full text-left py-2 text-sm text-stone-700 flex items-center gap-2"
             >
-              Store Management Console
+              <ShieldCheck className="w-4 h-4 text-[#2E4A3B]" />
+              <span>Store Owner Admin (PIN Protected)</span>
             </button>
           </div>
 

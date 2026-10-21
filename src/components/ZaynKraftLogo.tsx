@@ -89,15 +89,15 @@ export const ZaynKraftLogo: React.FC<LogoProps> = ({
       </div>
 
       {variant !== 'monogram' && (
-        <div className="flex flex-col select-none">
+        <div className="flex items-baseline gap-1 sm:gap-1.5 whitespace-nowrap leading-none select-none">
           <span
-            className="text-xs sm:text-base md:text-lg font-bold tracking-[0.16em] uppercase font-serif leading-none"
+            className="text-xs sm:text-base md:text-lg font-bold tracking-[0.14em] uppercase font-serif"
             style={{ color }}
           >
             ZAIN CRAFT
           </span>
           <span
-            className="text-[7px] sm:text-[8.5px] uppercase tracking-[0.32em] font-serif font-semibold mt-1 opacity-75 leading-none"
+            className="text-[7.5px] sm:text-[9px] uppercase tracking-[0.18em] font-serif font-semibold opacity-75"
             style={{ color: subtitleColor }}
           >
             DESIGN ATELIER

@@ -12,7 +12,8 @@ import {
   MessageCircle,
   Copy,
   Check,
-  ShoppingBag
+  ShoppingBag,
+  AlertCircle
 } from 'lucide-react';
 import { CartItem, Order, PaymentMethod } from '../types/store';
 import { PAKISTAN_CITIES } from '../data/products';
@@ -60,15 +61,13 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     if (!fullName.trim()) errors.fullName = 'Please enter your full name';
     
     // Clean phone number validation for Pakistan
-    const cleanPhone = phone.replace(/[\s-]/g, '');
-    if (!cleanPhone) {
-      errors.phone = 'Phone number is required for courier delivery';
-    } else if (!/^(03\d{9}|\+923\d{9})$/.test(cleanPhone)) {
-      errors.phone = 'Please enter a valid Pakistani mobile number (e.g. 0300 1234567)';
+    const cleanPhone = phone.replace(/[^0-9+]/g, '');
+    if (!cleanPhone || cleanPhone.length < 10) {
+      errors.phone = 'Please enter a valid mobile number (e.g. 03244167247)';
     }
 
-    if (!address.trim() || address.length < 10) {
-      errors.address = 'Please provide complete house/street address for accurate courier dispatch';
+    if (!address.trim() || address.trim().length < 5) {
+      errors.address = 'Please provide complete street or house delivery address';
     }
 
     setFormErrors(errors);
@@ -84,12 +83,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
       orderNumber: orderNum,
       items: [...items],
       customer: {
-        fullName,
-        phone,
-        email: email || undefined,
-        address,
+        fullName: fullName.trim(),
+        phone: phone.trim(),
+        email: email.trim() || undefined,
+        address: address.trim(),
         city,
-        notes: deliveryNotes || undefined,
+        notes: deliveryNotes.trim() || undefined,
       },
       paymentMethod,
       subtotal,
@@ -103,6 +102,17 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
       }),
       estimatedDelivery: city === 'Lahore' ? '1–2 business days' : '2–3 business days',
     };
+
+    // Save this order ID into the customer's personal device history
+    try {
+      const savedIds = JSON.parse(localStorage.getItem('zk_my_order_ids') || '[]');
+      if (!savedIds.includes(orderNum)) {
+        savedIds.unshift(orderNum);
+        localStorage.setItem('zk_my_order_ids', JSON.stringify(savedIds));
+      }
+    } catch {
+      // Ignore
+    }
 
     onOrderPlaced(newOrder);
     setPlacedOrder(newOrder);
@@ -118,7 +128,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/75 backdrop-blur-xs overflow-hidden">
       <div 
-        className="relative w-full max-w-3xl bg-[#F6F4EF] rounded-t-3xl sm:rounded-2xl shadow-2xl border border-[#D9C9A7]/50 flex flex-col overflow-hidden max-h-[94vh] sm:max-h-[90vh]"
+        className="relative w-full max-w-3xl bg-[#F6F4EF] rounded-t-3xl sm:rounded-2xl shadow-2xl border border-[#D9C9A7]/50 flex flex-col overflow-y-auto max-h-[94vh] sm:max-h-[90vh]"
         role="dialog"
         aria-modal="true"
         aria-labelledby="checkout-title"
@@ -472,6 +482,16 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 </div>
               </div>
             </div>
+
+            {/* Validation warning if required fields are missing */}
+            {Object.keys(formErrors).length > 0 && (
+              <div className="p-3 bg-rose-50 border border-rose-300 rounded-xl text-rose-800 text-xs flex items-center gap-2 animate-fadeIn">
+                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                <span className="font-medium">
+                  {Object.values(formErrors)[0]}
+                </span>
+              </div>
+            )}
 
             {/* Sticky Mobile & Desktop Submit Button */}
             <div className="sticky bottom-0 bg-[#F6F4EF]/95 backdrop-blur-md pt-2 pb-1">

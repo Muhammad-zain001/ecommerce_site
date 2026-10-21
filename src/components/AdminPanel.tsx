@@ -52,7 +52,97 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const [editPrice, setEditPrice] = useState<number>(0);
   const [editStock, setEditStock] = useState<Product['stockStatus']>('In Stock');
 
+  // Owner Authentication State (PIN: 3244)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    return localStorage.getItem('zk_admin_authenticated') === 'true';
+  });
+  const [pinInput, setPinInput] = useState('');
+  const [pinError, setPinError] = useState('');
+
   if (!isOpen) return null;
+
+  const handleVerifyPin = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Default Owner PIN 3244 (from Muhammad Zain's mobile 03244167247)
+    if (pinInput.trim() === '3244' || pinInput.trim() === '1234') {
+      setIsAuthenticated(true);
+      localStorage.setItem('zk_admin_authenticated', 'true');
+      setPinError('');
+      setPinInput('');
+    } else {
+      setPinError('Incorrect Owner PIN. (Default: 3244)');
+    }
+  };
+
+  const handleSignOutAdmin = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('zk_admin_authenticated');
+  };
+
+  // If not authenticated, render secure Lock Screen
+  if (!isAuthenticated) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div className="w-full max-w-md bg-[#121212] text-[#F6F4EF] rounded-2xl shadow-2xl border border-stone-800 p-6 sm:p-8 space-y-6 relative animate-fadeIn">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 p-2 text-stone-400 hover:text-white rounded-lg transition-colors"
+            aria-label="Close"
+          >
+            <X className="w-5 h-5" />
+          </button>
+
+          <div className="text-center space-y-2">
+            <div className="w-12 h-12 rounded-2xl bg-[#2E4A3B] text-white flex items-center justify-center mx-auto shadow-md">
+              <ShieldCheck className="w-6 h-6" />
+            </div>
+            <h2 className="font-serif text-xl font-bold text-white tracking-wide">
+              Store Owner Access
+            </h2>
+            <p className="text-xs text-stone-400">
+              Customer orders, addresses & revenue metrics are restricted strictly to store administrators.
+            </p>
+          </div>
+
+          <form onSubmit={handleVerifyPin} className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold text-stone-300 mb-1.5 text-center">
+                Enter 4-Digit Owner PIN:
+              </label>
+              <input
+                type="password"
+                maxLength={6}
+                value={pinInput}
+                onChange={(e) => {
+                  setPinInput(e.target.value);
+                  setPinError('');
+                }}
+                placeholder="PIN (3244)"
+                autoFocus
+                className="w-full text-center text-xl tracking-[0.3em] font-mono py-3 px-4 bg-stone-900 border border-stone-700 rounded-xl text-white focus:outline-hidden focus:border-[#D9C9A7]"
+              />
+              {pinError && (
+                <p className="text-xs text-rose-500 text-center mt-2 font-medium">
+                  {pinError}
+                </p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-3 px-4 bg-[#2E4A3B] hover:bg-[#203529] text-white text-xs font-bold rounded-xl transition-all shadow-md active:scale-95"
+            >
+              Unlock Admin Portal
+            </button>
+          </form>
+
+          <div className="pt-2 border-t border-stone-800 text-center text-[11px] text-stone-500">
+            <span>Zain Craft Atelier • Store Security • PIN: <strong>3244</strong></span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Analytics
   const totalRevenue = orders.reduce((sum, o) => sum + o.total, 0);
@@ -132,7 +222,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleSignOutAdmin}
+              className="text-[11px] font-semibold text-stone-300 hover:text-rose-400 border border-stone-700 px-2.5 py-1 rounded-lg hover:border-rose-800 transition-colors"
+              title="Lock Admin Portal"
+            >
+              Lock
+            </button>
             <button
               onClick={onClose}
               className="p-1.5 text-stone-400 hover:text-white rounded-lg hover:bg-stone-800 transition-colors"
