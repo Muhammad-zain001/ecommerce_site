@@ -1,0 +1,6 @@
+{
+  "name": "Zayn Kraft — Men's Wear & Style Atelier",
+  "description": "Zayn Kraft (ZK) Pakistani menswear e-commerce store featuring Shalwar Kameez, Kurtas, tailored shirts, and outerwear with Cash on Delivery nationwide.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
