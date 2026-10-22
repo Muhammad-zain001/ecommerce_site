@@ -18,6 +18,7 @@ import { PoliciesModal } from './components/PoliciesModal';
 import { AdminPanel } from './components/AdminPanel';
 import { CustomerOrdersModal } from './components/CustomerOrdersModal';
 import { Footer } from './components/Footer';
+import { submitOrderToBackend } from './services/api';
 import { FloatingWhatsApp } from './components/FloatingWhatsApp';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { Smartphone, Monitor } from 'lucide-react';
@@ -216,6 +217,8 @@ export default function App() {
 
   const handleOrderPlaced = (newOrder: Order) => {
     setOrders((prev) => [newOrder, ...prev]);
+    // Asynchronously dispatch to Django backend
+    submitOrderToBackend(newOrder);
   };
 
   const handleUpdateOrderStatus = (orderNum: string, newStatus: Order['status']) => {
