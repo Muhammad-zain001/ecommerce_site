@@ -26,3 +26,18 @@ body {
 .font-editorial {
   font-family: var(--font-serif);
 }
+
+/* Suppress Netlify Injected Development Drawer & Badges */
+netlify-drawer,
+#netlify-drawer-frame,
+[data-netlify-deploy-id],
+.netlify-drawer,
+div[class*="netlify-drawer"],
+iframe[src*="netlify"],
+a[href*="netlify.com"][class*="badge"],
+img[src*="netlify.com"][alt*="Netlify"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
